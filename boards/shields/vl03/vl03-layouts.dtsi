@@ -1,0 +1,21 @@
+#include <physical_layouts.dtsi>
+
+/ {
+    physical_layout_vl03: physical_layout_vl03 {
+        compatible = "zmk,physical-layout";
+        display-name = "VL03";
+        keys  //                     w   h    x    y     rot    rx    ry
+            = <&key_physical_attrs 100 100    0    0       0     0     0>
+            , <&key_physical_attrs 100 100  100    0       0   100     0>
+            , <&key_physical_attrs 100 100  200    0       0   200     0>
+            , <&key_physical_attrs 100 100  300    0       0   300     0>
+            , <&key_physical_attrs 100 100    0  100       0     0   100>
+            , <&key_physical_attrs 100 100  100  100       0   100   100>
+            , <&key_physical_attrs 100 100  200  100       0   200   100>
+            , <&key_physical_attrs 100 100    0  200       0     0   200>
+            , <&key_physical_attrs 100 100  100  200       0   100   200>
+            , <&key_physical_attrs 100 100  200  200       0   200   200>
+            , <&key_physical_attrs 100 100  300  200       0   300   200>
+            ;
+    };
+};

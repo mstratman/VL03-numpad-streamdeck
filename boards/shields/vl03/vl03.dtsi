@@ -1,0 +1,39 @@
+#include "vl03-layouts.dtsi"
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    matrix_transform0: matrix_transform0 {
+        compatible = "zmk,matrix-transform";
+        columns = <4>;
+        rows = <3>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2) RC(0,3)
+            RC(1,0) RC(1,1) RC(1,2)
+            RC(2,0) RC(2,1) RC(2,2) RC(2,3)
+        >;
+    };
+};
+
+&physical_layout_vl03 {
+    transform = <&matrix_transform0>;
+};
+
+// Encoders for all parts of the keyboard.
+// If the encoder(s) are not behaving as expected,
+// update steps and triggers-per-rotation to match your hardware.
+// All pin assignments are done in the part overlays.
+
+/ {
+    encoder0: encoder0 {
+        compatible = "alps,ec11";
+        steps = <80>;
+        status = "disabled";
+    };
+
+    sensors: sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder0>;
+        triggers-per-rotation = <20>;
+    };
+};
+
