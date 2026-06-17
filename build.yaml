@@ -20,17 +20,12 @@
 ---
 include:
 
+  # ZMK Studio is enabled via CONFIG_ZMK_STUDIO=y in config/vl03.conf.
+  # The studio-rpc-usb-uart snippet adds the USB transport Studio talks over.
   - board: seeeduino_xiao_ble
     shield: vl03
-
-## To build with ZMK Studio support, uncomment the following block
-## by removing the leading '#' from each line.
-
-#  - board: seeeduino_xiao_ble
-#    shield: vl03
-#    snippet: studio-rpc-usb-uart
-#    cmake-args: -DCONFIG_ZMK_STUDIO=y
-#    artifact-name: vl03_with_studio
+    snippet: studio-rpc-usb-uart
+    artifact-name: vl03
 
   - board: seeeduino_xiao_ble
     shield: settings_reset

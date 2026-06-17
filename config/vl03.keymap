@@ -1,18 +1,60 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
+#define NUMPAD 0
+#define FUNC   1
+
 / {
+    combos {
+        compatible = "zmk,combos";
+
+        // Encoder switch (position 3) + the "0" key (position 10) toggles the
+        // Function layer. Because it is active on both layers, the same chord
+        // switches back to the Numpad layer again.
+        combo_func_toggle {
+            timeout-ms = <50>;
+            key-positions = <3 10>;
+            bindings = <&tog FUNC>;
+            layers = <NUMPAD FUNC>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
-            display-name = "Base";
+        // ------------------------------------------------------------------
+        //  Layer 0 - Numpad
+        //   7   8   9   (mute / encoder switch)
+        //   4   5   6
+        //   1   2   3   0
+        //  Encoder rotate = volume down / up
+        // ------------------------------------------------------------------
+        numpad_layer {
+            display-name = "Numpad";
             bindings = <
-                &kp A &kp B &kp C &kp D
-                &kp E &kp F &kp G
-                &kp H &kp I &kp J &kp K
+                &kp KP_N7  &kp KP_N8  &kp KP_N9  &kp C_MUTE
+                &kp KP_N4  &kp KP_N5  &kp KP_N6
+                &kp KP_N1  &kp KP_N2  &kp KP_N3  &kp KP_N0
             >;
-            sensor-bindings = <&inc_dec_kp A B>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+        };
+
+        // ------------------------------------------------------------------
+        //  Layer 1 - Function (F13-F21)
+        //   F13  F14  F15  (mute / encoder switch)
+        //   F16  F17  F18
+        //   F19  F20  F21  studio_unlock
+        //  Encoder rotate = volume down / up
+        //  Tap the "0" key here to unlock ZMK Studio for editing.
+        // ------------------------------------------------------------------
+        function_layer {
+            display-name = "Function";
+            bindings = <
+                &kp F13  &kp F14  &kp F15  &kp C_MUTE
+                &kp F16  &kp F17  &kp F18
+                &kp F19  &kp F20  &kp F21  &studio_unlock
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
 };
