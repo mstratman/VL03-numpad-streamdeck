@@ -22,11 +22,11 @@ include:
 
   # ZMK Studio is enabled via CONFIG_ZMK_STUDIO=y in config/vl03.conf.
   # The studio-rpc-usb-uart snippet adds the USB transport Studio talks over.
-  - board: seeeduino_xiao_ble
+  - board: waveshare_rp2040_zero
     shield: vl03
     snippet: studio-rpc-usb-uart
     artifact-name: vl03
 
-  - board: seeeduino_xiao_ble
+  - board: waveshare_rp2040_zero
     shield: settings_reset
   

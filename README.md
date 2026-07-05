@@ -24,16 +24,17 @@ every key becomes an F13–F21 hotkey you can bind in OBS, Voicemeeter, or anyth
 - **Two layers** out of the box: a numpad and a row of F-keys (great as a stream deck).
 - **[ZMK Studio](https://zmk.dev/docs/features/studio) support** — change your layout live from a browser, no recompiling.
 - **Board-agnostic 3D-printed case** — the controller bay accepts **both** the XIAO **and** the
-  SuperMini footprints. Drop in a **Seeed XIAO** (nRF52840 / RP2040 / ESP32-S3) **or** an
-  **ESP32-C3 / ESP32-S3 SuperMini** — among other similar-size boards. This prebuilt firmware
-  targets the **Seeed XIAO nRF52840**.
+  SuperMini footprints. Drop in a **Seeed XIAO** (nRF52840 / RP2040 / ESP32-S3), an
+  **ESP32-C3 / ESP32-S3 SuperMini**, or a **Waveshare RP2040-Zero** — among other similar-size
+  boards. This prebuilt firmware targets the **Waveshare RP2040-Zero** and is **USB-only**
+  (the RP2040 has no radio, so there's no Bluetooth on this build).
 - Fully open: the [keymap](config/vl03.keymap) is a plain text file you can edit and rebuild.
 
 ---
 
 ## What you need to build one
 
-- A small dev board (this prebuilt firmware is for the **Seeed XIAO nRF52840**).
+- A small dev board (this prebuilt firmware is for the **Waveshare RP2040-Zero**).
 - 10 mechanical switches + keycaps.
 - 1 x **EC11 rotary encoder** (the kind with a push-button shaft).
 - 11 x **1N4148 diodes** (one per switch *and* one for the encoder's push-button).
@@ -67,18 +68,18 @@ YouTube: **<https://www.youtube.com/watch?v=3G4t_2rlGYE>**
 
 ![The hand-wired diode matrix inside the VL03](Media/pic%20of%20handwiring.jpg)
 
-**A note on pin names:** the XIAO's solder pads are printed with plain numbers on the board
-itself — `0`, `1`, `2` … `10`. Inside the ZMK config files those same pins are written as
-`D0`–`D10`. They are the same thing: pad `0` = `D0`, pad `6` = `D6`, and so on. The tables
-below use the **numbers you'll actually see on the board**.
+**A note on pin names:** the Waveshare RP2040-Zero's header pads are printed `0`–`29` on the
+board itself (its silkscreen calls them `GP0`–`GP29`). Inside the ZMK config files those same
+pins are written as `GP0`–`GP29`. The tables below use the **numbers you'll actually see on
+the board**.
 
 If you wire it exactly like this, the prebuilt firmware just works — **no compiling needed**.
 
-| Role | XIAO pads |
+| Role | RP2040-Zero pads |
 | --- | --- |
-| **Columns** (4) | `0`, `5`, `7`, `8` |
-| **Rows** (3) | `6`, `9`, `10` |
-| **Encoder** A / B | `3` / `4` |
+| **Columns** (4) | `GP0`, `GP1`, `GP2`, `GP3` |
+| **Rows** (3) | `GP4`, `GP5`, `GP6` |
+| **Encoder** A / B | `GP7` / `GP8` |
 | **Encoder** common (middle pin) | `GND` |
 
 ### Which switch goes where
@@ -86,11 +87,11 @@ If you wire it exactly like this, the prebuilt firmware just works — **no comp
 Each switch connects one **row** pad to one **column** pad (through its diode). The encoder's
 push-button is just another key in the matrix (top-right corner).
 
-|             | Col `0` | Col `5` | Col `7` | Col `8` |
-| ----------- | :-----: | :-----: | :-----: | :----------: |
-| **Row `6`**  |   `7`   |   `8`   |   `9`   | encoder push |
-| **Row `9`**  |   `4`   |   `5`   |   `6`   |      –       |
-| **Row `10`** |   `1`   |   `2`   |   `3`   |     `0`      |
+|              | Col `GP0` | Col `GP1` | Col `GP2` | Col `GP3` |
+| ------------ | :-------: | :-------: | :-------: | :----------: |
+| **Row `GP4`**  |    `7`    |    `8`    |    `9`    | encoder push |
+| **Row `GP5`**  |    `4`    |    `5`    |    `6`    |      –       |
+| **Row `GP6`**  |    `1`    |    `2`    |    `3`    |     `0`      |
 
 ### Diodes
 
@@ -105,8 +106,8 @@ too, exactly like the keys.
 
 A standard EC11 has 3 pins on one side (**A · C · B**) and 2 pins on the other (the push-button):
 
-- **A -> pad `3`**, **B -> pad `4`**, **C (middle) -> `GND`**
-- The 2 push-button pins go into the **matrix** at the top-right slot (Row `6` to Col `8`, with a diode).
+- **A -> pad `GP7`**, **B -> pad `GP8`**, **C (middle) -> `GND`**
+- The 2 push-button pins go into the **matrix** at the top-right slot (Row `GP4` to Col `GP3`, with a diode).
 
 ---
 
@@ -114,9 +115,10 @@ A standard EC11 has 3 pins on one side (**A · C · B**) and 2 pins on the other
 
 1. Download the latest **`vl03`** firmware (a `.uf2` file) from this repo's **Actions** tab ->
    newest run -> **Artifacts**. (See the [ZMK guide](https://zmk.dev/docs/user-setup#installing-the-firmware) if you get stuck.)
-2. Plug the numpad into your computer with USB.
-3. **Double-tap the RESET button** on the XIAO quickly. A USB drive will pop up.
-4. **Drag the `.uf2` file onto that drive.** It flashes and reboots itself. Done.
+2. **Hold down the BOOT button** on the RP2040-Zero, then plug it into your computer with USB
+   (or hold BOOT and tap RESET if it's already plugged in). A USB drive named **`RPI-RP2`**
+   will pop up.
+3. **Drag the `.uf2` file onto that drive.** It flashes and reboots itself. Done.
 
 > **Something acting weird after an update?** This repo also builds a `settings_reset`
 > firmware. Flash that `.uf2` the same way to wipe stored settings, then flash `vl03` again.
