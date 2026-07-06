@@ -26,7 +26,7 @@
 / {
     encoder0: encoder0 {
         compatible = "alps,ec11";
-        steps = <80>;
+        steps = <40>;
         status = "disabled";
     };
 
