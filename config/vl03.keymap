@@ -20,7 +20,7 @@
             layers = <NUMPAD FUNC>;
         };
 
-        // Encoder switch (position 3) + the "7" key (position 0) toggles the
+        // Encoder switch (position 3) + the "1" key (position 0) toggles the
         // RGB layer, which controls the WS2812B panel. Kept separate from the
         // Function-layer combo above so RGB and Function can't both end up
         // active at once.
@@ -37,55 +37,62 @@
 
         // ------------------------------------------------------------------
         //  Layer 0 - Numpad
-        //   7   8   9   (mute / encoder switch)
-        //   4   5   6
-        //   1   2   3   0
-        //  Encoder rotate = volume down / up
+        //  Case rotated 90 degrees CCW from the original wiring. As the user
+        //  now sees it:
+        //   (mute/enc)   .    0
+        //       7        8    9
+        //       4        5    6
+        //       1        2    3
+        //  Encoder rotate = volume down / up (reversed from original wiring)
         // ------------------------------------------------------------------
         numpad_layer {
             display-name = "Numpad";
             bindings = <
-                &kp N7  &kp N8  &kp N9  &kp C_MUTE
-                &kp N4  &kp N5  &kp N6
-                &kp N1  &kp N2  &kp N3  &kp N0
+                &kp N1  &kp N4  &kp N7  &kp C_MUTE
+                &kp N2  &kp N5  &kp N8
+                &kp N3  &kp N6  &kp N9  &kp N0
             >;
-            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         // ------------------------------------------------------------------
         //  Layer 1 - Function (F13-F21)
-        //   F13  F14  F15  (mute / encoder switch)
-        //   F16  F17  F18
-        //   F19  F20  F21  studio_unlock
-        //  Encoder rotate = volume down / up
-        //  Tap the "0" key here to unlock ZMK Studio for editing.
+        //  Same rotation as the Numpad layer:
+        //   (mute/enc)   .   studio_unlock
+        //      F13      F14      F15
+        //      F16      F17      F18
+        //      F19      F20      F21
+        //  Encoder rotate = volume down / up (reversed from original wiring)
+        //  Tap the studio_unlock key here to unlock ZMK Studio for editing.
         // ------------------------------------------------------------------
         function_layer {
             display-name = "Function";
             bindings = <
-                &kp F13  &kp F14  &kp F15  &kp C_MUTE
-                &kp F16  &kp F17  &kp F18
-                &kp F19  &kp F20  &kp F21  &studio_unlock
+                &kp F19  &kp F16  &kp F13  &kp C_MUTE
+                &kp F20  &kp F17  &kp F14
+                &kp F21  &kp F18  &kp F15  &studio_unlock
             >;
-            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         // ------------------------------------------------------------------
         //  Layer 2 - RGB (controls the WS2812B 4x4 panel)
-        //   next   prev   speed+  (toggle on/off)
-        //   speed- hue-   hue+
-        //   sat-   sat+   bright- bright+
-        //  Encoder rotate = volume down / up (unchanged)
-        //  Toggle this layer with encoder switch + "7" (see combo above).
+        //  Same rotation as the Numpad layer:
+        //   (toggle)   .   bright+
+        //     next    prev   speed+
+        //    speed-   hue-   hue+
+        //     sat-    sat+   bright-
+        //  Encoder rotate = volume down / up (unchanged, reversed like the others)
+        //  Toggle this layer with encoder switch + "1" (see combo above).
         // ------------------------------------------------------------------
         rgb_layer {
             display-name = "RGB";
             bindings = <
-                &rgb_ug RGB_EFF  &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_TOG
-                &rgb_ug RGB_SPD  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI
-                &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI
+                &rgb_ug RGB_SAD  &rgb_ug RGB_SPD  &rgb_ug RGB_EFF  &rgb_ug RGB_TOG
+                &rgb_ug RGB_SAI  &rgb_ug RGB_HUD  &rgb_ug RGB_EFR
+                &rgb_ug RGB_BRD  &rgb_ug RGB_HUI  &rgb_ug RGB_SPI  &rgb_ug RGB_BRI
             >;
-            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
 };
