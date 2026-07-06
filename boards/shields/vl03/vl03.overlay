@@ -1,4 +1,5 @@
 #include "vl03.dtsi"
+#include <dt-bindings/led/led.h>
 
 / {
     kscan0: kscan0 {
@@ -29,5 +30,49 @@
     a-gpios = <&gpio0 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
     b-gpios = <&gpio0 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
     status = "okay";
+};
+
+// WS2812B 4x4 (16 LED) panel, driven over PIO0 via the SPI-over-PIO trick.
+// Data (DIN) -> GP9. GP10 isn't wired to anything; the PIO-SPI driver just
+// needs a spare clock pin even though WS2812 has no real clock line.
+&pinctrl {
+    pio0_spi0_default: pio0_spi0_default {
+        group1 {
+            pinmux = <PIO0_P9>;
+        };
+    };
+};
+
+&pio0 {
+    status = "okay";
+
+    pio0_spi0: pio0_spi0 {
+        pinctrl-0 = <&pio0_spi0_default>;
+        pinctrl-names = "default";
+        compatible = "raspberrypi,pico-spi-pio";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        clocks = <&system_clk>;
+        clock-frequency = <4000000>;
+        clk-gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+        mosi-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+        miso-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+
+        led_strip: ws2812@0 {
+            compatible = "worldsemi,ws2812-spi";
+            reg = <0>;
+            spi-max-frequency = <4000000>;
+            chain-length = <16>;
+            spi-one-frame = <0x70>;
+            spi-zero-frame = <0x40>;
+            color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
+        };
+    };
+};
+
+/ {
+    chosen {
+        zmk,underglow = &led_strip;
+    };
 };
 

@@ -21,7 +21,8 @@ every key becomes an F13–F21 hotkey you can bind in OBS, Voicemeeter, or anyth
 ## Features
 
 - **10 keys + a clicky rotary encoder** (volume / mute).
-- **Two layers** out of the box: a numpad and a row of F-keys (great as a stream deck).
+- **Three layers** out of the box: a numpad, a row of F-keys (great as a stream deck), and
+  an RGB control layer for an optional WS2812B lighting panel.
 - **[ZMK Studio](https://zmk.dev/docs/features/studio) support** — change your layout live from a browser, no recompiling.
 - **Board-agnostic 3D-printed case** — the controller bay accepts **both** the XIAO **and** the
   SuperMini footprints. Drop in a **Seeed XIAO** (nRF52840 / RP2040 / ESP32-S3), an
@@ -81,6 +82,12 @@ If you wire it exactly like this, the prebuilt firmware just works — **no comp
 | **Rows** (3) | `GP4`, `GP5`, `GP6` |
 | **Encoder** A / B | `GP7` / `GP8` |
 | **Encoder** common (middle pin) | `GND` |
+| **RGB panel** data (DIN) | `GP9` |
+| **RGB panel** power / ground | `5V` / `GND` |
+
+> `GP10` is reserved by the firmware for the RGB panel's driver (a quirk of how
+> the RP2040 sends the WS2812 data signal) but isn't wired to anything —
+> leave it unconnected.
 
 ### Which switch goes where
 
@@ -108,6 +115,23 @@ A standard EC11 has 3 pins on one side (**A · C · B**) and 2 pins on the other
 
 - **A -> pad `GP7`**, **B -> pad `GP8`**, **C (middle) -> `GND`**
 - The 2 push-button pins go into the **matrix** at the top-right slot (Row `GP4` to Col `GP3`, with a diode).
+
+### RGB panel (optional)
+
+A **WS2812B 4x4 (16-LED) panel** can be added as a lighting accessory:
+
+- Panel **DIN -> pad `GP9`**.
+- Panel **5V -> `5V`**, panel **GND -> `GND`**.
+- A bulk capacitor (~470-1000uF) across the panel's 5V/GND, and a ~300-470ohm
+  resistor in series on the data line near the first LED, are both cheap
+  insurance against flicker and voltage spikes.
+- The RP2040 drives the data line at 3.3V, which is under WS2812B's nominal
+  spec (~3.5V) but usually works fine over a short wire. If you see flicker
+  or stuck pixels, add a logic-level shifter (e.g. 74AHCT125) or power the
+  panel from ~4.5V instead of a full 5V.
+- 16 LEDs at full brightness can draw close to 1A, more than a USB port
+  reliably supplies — the firmware caps brightness at 50% by default
+  (`CONFIG_ZMK_RGB_UNDERGLOW_BRT_MAX` in [`config/vl03.conf`](config/vl03.conf)).
 
 ---
 
@@ -147,10 +171,26 @@ Encoder: **rotate = volume down / up**, **press = mute**.
 | --- | - | - | - | - | - | - | - | - | - | - |
 | **Sends** | F13 | F14 | F15 | F16 | F17 | F18 | F19 | F20 | F21 | *(unlock)* |
 
+### Layer 2 — RGB (controls the WS2812B panel, if installed)
+```
+ next     prev     speed+   (toggle)
+ speed-   hue-     hue+
+ sat-     sat+     bright-  bright+
+```
+Encoder: **rotate = volume down / up** (same as the other layers — lighting controls
+don't take over the encoder).
+
+| Key | 7 | 8 | 9 | (enc push) | 4 | 5 | 6 | 1 | 2 | 3 | 0 |
+| --- | - | - | - | - | - | - | - | - | - | - | - |
+| **Does** | next effect | prev effect | speed up | on/off | speed down | hue down | hue up | sat down | sat up | bright down | bright up |
+
 ### Switching layers
 
-**Press the encoder button + the `0` key at the same time** to toggle between the Numpad
-and Function layers. The *same* combo flips you back. (It's a chord, so press both together.)
+- **Encoder button + `0`** toggles between the **Numpad** and **Function** layers.
+- **Encoder button + `7`** toggles between the **Numpad** and **RGB** layers.
+
+Both are chords — press both keys together — and each flips you back the same way.
+(To get from Function to RGB or back, pass through Numpad first.)
 
 ---
 
