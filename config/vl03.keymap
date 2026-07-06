@@ -81,9 +81,9 @@
         rgb_layer {
             display-name = "RGB";
             bindings = <
-                &rgb_ug UG_NEXT  &rgb_ug UG_PRD  &rgb_ug UG_SPI  &rgb_ug UG_TOG
-                &rgb_ug UG_SPD   &rgb_ug UG_HUD  &rgb_ug UG_HUI
-                &rgb_ug UG_SAD   &rgb_ug UG_SAI  &rgb_ug UG_BRD  &rgb_ug UG_BRI
+                &rgb_ug RGB_EFF  &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_TOG
+                &rgb_ug RGB_SPD  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI
+                &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
