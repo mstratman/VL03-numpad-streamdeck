@@ -95,22 +95,25 @@
 
         /*
 	 * Start at the beginning of usable flash (just past the 0x100
-	 * second-stage bootloader space) and run up to the last 16 KiB,
-	 * which is reserved below for settings storage.
+	 * second-stage bootloader space) and run up to the last 512 KiB,
+	 * which is reserved below for settings storage. Sized generously
+	 * (matching ZMK's own RP2040 board example) because CONFIG_ZMK_STUDIO
+	 * persists the whole dynamic keymap here, not just small settings
+	 * like RGB underglow state.
 	 */
 	code_partition: partition@100 {
 	    label = "code";
-	    reg = <0x100 (DT_SIZE_M(2) - DT_SIZE_K(16) - 0x100)>;
+	    reg = <0x100 (DT_SIZE_M(2) - DT_SIZE_K(512) - 0x100)>;
 	    read-only;
 	};
 
         /*
-	 * The final 16 KiB of the actual 2MB chip is reserved for
+	 * The final 512 KiB of the actual 2MB chip is reserved for
 	 * settings storage (FCB or LittleFS/NVS).
 	 */
-        storage_partition: partition@1fc000 {
+        storage_partition: partition@180000 {
 	    label = "storage";
-	    reg = <0x001fc000 DT_SIZE_K(16)>;
+	    reg = <0x00180000 DT_SIZE_K(512)>;
 	};
     };
 };
