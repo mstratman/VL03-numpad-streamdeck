@@ -94,22 +94,23 @@
 	#size-cells = <1>;
 
         /*
-	 * Start at the beginning of usable flash, 8MB minus the
-	 * second stage space and the 16 KiB reserved for settings
+	 * Start at the beginning of usable flash (just past the 0x100
+	 * second-stage bootloader space) and run up to the last 16 KiB,
+	 * which is reserved below for settings storage.
 	 */
 	code_partition: partition@100 {
 	    label = "code";
-	    reg = <0x100 (DT_SIZE_M(2) - DT_SIZE_K(16))>;
+	    reg = <0x100 (DT_SIZE_M(2) - DT_SIZE_K(16) - 0x100)>;
 	    read-only;
 	};
 
         /*
-	 * The final 16 KiB is reserved for the application.
-	 * Storage partition may be used by FCB or LittleFS.
+	 * The final 16 KiB of the actual 2MB chip is reserved for
+	 * settings storage (FCB or LittleFS/NVS).
 	 */
-        storage_partition: partition@7fbe00 {
+        storage_partition: partition@1fc000 {
 	    label = "storage";
-	    reg = <0x007fbe00 DT_SIZE_K(16)>;
+	    reg = <0x001fc000 DT_SIZE_K(16)>;
 	};
     };
 };
